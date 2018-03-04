@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  w: 1
+  'y': 1
+  t: MyString
+  gd: 1
+  bph: MyString
+
+two:
+  w: 1
+  'y': 1
+  t: MyString
+  gd: 1
+  bph: MyString

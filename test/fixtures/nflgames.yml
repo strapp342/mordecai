@@ -1,0 +1,33 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  eid: MyString
+  gsis: MyString
+  d: MyString
+  t: MyString
+  q: MyString
+  h: MyString
+  hnn: MyString
+  hs: 1
+  v: MyString
+  vnn: MyString
+  vs: 1
+  rz: 1
+  ga: MyString
+  gt: MyString
+
+two:
+  eid: MyString
+  gsis: MyString
+  d: MyString
+  t: MyString
+  q: MyString
+  h: MyString
+  hnn: MyString
+  hs: 1
+  v: MyString
+  vnn: MyString
+  vs: 1
+  rz: 1
+  ga: MyString
+  gt: MyString
