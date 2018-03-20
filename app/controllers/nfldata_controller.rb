@@ -11,18 +11,13 @@ class NfldataController < ApplicationController
 
     # current_week_schedule
     if Nflgame.all.count == 0
-      current_week_schedule
-      #full_schedule(2017)
+      #current_week_schedule
+      full_schedule(2017)
     end
+  end
 
-    @gamesJson = []
+  def show
 
-    @allgames = Nflgame.all
-    @allgames.each_with_index do |game, i|
-      url = "http://www.nfl.com/liveupdate/game-center/#{game.eid}/#{game.eid}_gtd.json"
-      @gamesJson[i] = JSON.parse(open(url).read)
-    end
-    @game = @gamesJson[0]['2017123102']
   end
 
   def current_week_schedule
@@ -58,43 +53,25 @@ class NfldataController < ApplicationController
     seasonTypePost = "POST"
 
     @week = []
+    4.times do |w|
+      url = "http://www.nfl.com/ajax/scorestrip?season=2017&seasonType=PRE&week=#{w+1}"
+      @week[w] = open(url)
+    end
 
-    # 25.times do |w|
-    #   if w >= 1 && w < 5
-    #     # Preseason
-    #     @url = "http://www.nfl.com/ajax/scorestrip?season=#{season}&seasonType=#{seasonTypePre}&week=#{w}"
-    #   elsif w >= 5 && w < 21
-    #     # Regular season
-    #     wk = w - 4
-    #     @url = "http://www.nfl.com/ajax/scorestrip?season=#{season}&seasonType=#{seasonTypeReg}&week=#{wk}"
-    #   elsif w >= 21 && w < 25
-    #     # Post season
-    #     wk = w - 4
-    #     @url = "http://www.nfl.com/ajax/scorestrip?season=#{season}&seasonType=#{seasonTypePost}&week=#{wk}"
-    #   else
-    #     # something went wrong
-    #     @url = "http://www.nfl.com/ajax/scorestrip?season=2017&seasonType=REG&week=4"
-    #     break
-    #   end
+    17.times do |w|
+      url = "http://www.nfl.com/ajax/scorestrip?season=2017&seasonType=REG&week=#{w+1}"
+      @week[w + 4] = open(url)
+    end
 
-    #   # open(url)
-    #   week[w] = open(@url)
-    # end
-
-     4.times do |w|
-       url = "http://www.nfl.com/ajax/scorestrip?season=2017&seasonType=PRE&week=#{w+1}"
-       @week[w] = open(url)
-     end
-
-     17.times do |w|
-       url = "http://www.nfl.com/ajax/scorestrip?season=2017&seasonType=REG&week=#{w}"
-       @week[w + 4] = open(url)
-     end
-
-     4.times do |w|
-       url = "http://www.nfl.com/ajax/scorestrip?season=2017&seasonType=POST&week#{w}"
-       @week[w + 21] = open(url)
-     end
+    5.times do |w|
+      if w == 3
+        url = "http://www.nfl.com/ajax/scorestrip?season=2017&seasonType=PRO&week=#{w+18}"
+        @week[w + 21] = open(url)
+      else
+        url = "http://www.nfl.com/ajax/scorestrip?season=2017&seasonType=POST&week=#{w+18}"
+        @week[w + 21] = open(url)
+      end
+    end
 
     @data = []
 
@@ -102,32 +79,50 @@ class NfldataController < ApplicationController
       @data[i] = Hash.from_xml(w)
     end
     @data.each.with_index do |d, i|
-      @gms = d['ss']
-     # @gms = d['ss']['gms']
-     # gms = @gms
-     # nflweek = Nflweek.create(w: gms['w'], y: gms['y'], t: gms['t'], gd: gms['gd'], bph: gms['bph'])
+      @gms = d['ss']['gms']
+      gms = @gms
+      nflweek = Nflweek.create(w: gms['w'], y: gms['y'], t: gms['t'], gd: gms['gd'], bph: gms['bph'])
 
-     # @games = gms['g']
+      @games = gms['g']
 
-      #@games.each.with_index do |game, i|
-      #  @g = game
-      #
-      #  Nflgame.create(
-      #    eid: g[i]['eid'],
-      #    gsis: g['gsis'],
-      #    d: g['d'],
-      #    t: g['t'],
-      #    q: g['q'],
-      #    h: g['h'],
-      #    hnn: g['hnn'],
-      #    hs: g['hs'],
-      #    v: g['v'],
-      #    vnn: g['vnn'],
-      #    vs: g['vs'],
-      #    rz: g['rz'],
-      #    gt: g['gt'],
-      #    nflweek_id: nflweek.id)
-      #end
+      if @games[1]
+        @games.each.with_index do |game, i|
+          g = game
+
+          Nflgame.create(
+            eid: g['eid'],
+            gsis: g['gsis'],
+            d: g['d'],
+            t: g['t'],
+            q: g['q'],
+            h: g['h'],
+            hnn: g['hnn'],
+            hs: g['hs'],
+            v: g['v'],
+            vnn: g['vnn'],
+            vs: g['vs'],
+            rz: g['rz'],
+            gt: g['gt'],
+            nflweek_id: nflweek.id)
+        end
+      else
+        g = @games
+        Nflgame.create(
+          eid: g['eid'],
+          gsis: g['gsis'],
+          d: g['d'],
+          t: g['t'],
+          q: g['q'],
+          h: g['h'],
+          hnn: g['hnn'],
+          hs: g['hs'],
+          v: g['v'],
+          vnn: g['vnn'],
+          vs: g['vs'],
+          rz: g['rz'],
+          gt: g['gt'],
+          nflweek_id: nflweek.id)
+      end
     end
   end
 end
