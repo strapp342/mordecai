@@ -16,11 +16,9 @@ class CreateNflweeks < ActiveRecord::Migration[5.1]
       t.string :d
       t.string :t
       t.string :q
-      t.string :h
-      t.string :hnn
+      t.integer :h
       t.string :hs
-      t.string :v
-      t.string :vnn
+      t.integer :v
       t.string :vs
       t.string :rz
       t.string :ga

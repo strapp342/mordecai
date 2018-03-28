@@ -2,18 +2,6 @@ require 'open-uri'
 
 class NfldataController < ApplicationController
   def index
-    # @root_url = "http://www.nfl.com/"
-    # @liveupdate_url = root_url + "liveupdate/"
-    # @scorestrip_url = @liveupdate_url + "scorestrip"
-    #
-    # current_week_schedule
-    # full_schedule(2017)
-
-    # current_week_schedule
-    if Nflgame.all.count == 0
-      #current_week_schedule
-      full_schedule(2017)
-    end
   end
 
   def show
@@ -41,88 +29,35 @@ class NfldataController < ApplicationController
     current_week = Nflweek.create(w: @gms['w'], y: @gms['y'], t: @gms['t'], gd: @gms['gd'], bph: @gms['bph'])
 
     @g.each do |g|
-      Nflgame.create(eid: g['eid'], gsis: g['gsis'], d: g['d'], t: g['t'], q: g['q'], h: g['h'], hnn: g['hnn'], hs: g['hs'], v: g['v'], vnn: g['vnn'], vs: g['vs'], rz: g['rz'], gt: g['gt'], nflweek_id: current_week.id)
+      hteam = Nflteam.find_by(abbr: g['h'])
+      vteam = Nflteam.find_by(abbr: g['v'])
+      Nflgame.create(
+        eid: g['eid'],
+        gsis: g['gsis'],
+        d: g['d'],
+        t: g['t'],
+        q: g['q'],
+        h: hteam.id,
+        hs: g['hs'],
+        v: vteam.id,
+        vs: g['vs'],
+        rz: g['rz'],
+        gt: g['gt'],
+        nflweek_id: current_week.id)
     end
   end
 
-
-  def full_schedule(year)
-    season = year
-    seasonTypePre = "PRE"
-    seasonTypeReg = "REG"
-    seasonTypePost = "POST"
-
-    @week = []
-    4.times do |w|
-      url = "http://www.nfl.com/ajax/scorestrip?season=2017&seasonType=PRE&week=#{w+1}"
-      @week[w] = open(url)
+  def createNflTeams(teams)
+    teams.each do |t|
+      Nflteam.create(
+        abbr: t.abbr,
+        nn: t.nn,
+        wins: t.wins,
+        losses: t.losses)
     end
+  end
 
-    17.times do |w|
-      url = "http://www.nfl.com/ajax/scorestrip?season=2017&seasonType=REG&week=#{w+1}"
-      @week[w + 4] = open(url)
-    end
-
-    5.times do |w|
-      if w == 3
-        url = "http://www.nfl.com/ajax/scorestrip?season=2017&seasonType=PRO&week=#{w+18}"
-        @week[w + 21] = open(url)
-      else
-        url = "http://www.nfl.com/ajax/scorestrip?season=2017&seasonType=POST&week=#{w+18}"
-        @week[w + 21] = open(url)
-      end
-    end
-
-    @data = []
-
-    @week.each.with_index do |w, i|
-      @data[i] = Hash.from_xml(w)
-    end
-    @data.each.with_index do |d, i|
-      @gms = d['ss']['gms']
-      gms = @gms
-      nflweek = Nflweek.create(w: gms['w'], y: gms['y'], t: gms['t'], gd: gms['gd'], bph: gms['bph'])
-
-      @games = gms['g']
-
-      if @games[1]
-        @games.each.with_index do |game, i|
-          g = game
-
-          Nflgame.create(
-            eid: g['eid'],
-            gsis: g['gsis'],
-            d: g['d'],
-            t: g['t'],
-            q: g['q'],
-            h: g['h'],
-            hnn: g['hnn'],
-            hs: g['hs'],
-            v: g['v'],
-            vnn: g['vnn'],
-            vs: g['vs'],
-            rz: g['rz'],
-            gt: g['gt'],
-            nflweek_id: nflweek.id)
-        end
-      else
-        g = @games
-        Nflgame.create(
-          eid: g['eid'],
-          gsis: g['gsis'],
-          d: g['d'],
-          t: g['t'],
-          q: g['q'],
-          h: g['h'],
-          hnn: g['hnn'],
-          hs: g['hs'],
-          v: g['v'],
-          vnn: g['vnn'],
-          vs: g['vs'],
-          rz: g['rz'],
-          gt: g['gt'],
-          nflweek_id: nflweek.id)
-      end
-    end
+  def countNflTeams
+    return count(Nflteam.all)
   end
 end

@@ -3,6 +3,7 @@
   <tr>
     <th>eid</th>
     <th>season</th>
+    <th>type</th>
     <th>week</th>
     <th>away</th>
     <th>home</th>
@@ -12,10 +13,13 @@
   <tr>
     <td><%= link_to game.eid, nflgame_path(game) %></td>
     <% week = Nflweek.find(game.nflweek_id) %>
+    <% h = Nflteam.find(game.h) %>
+    <% v = Nflteam.find(game.v) %>
     <td><%= week.y %></td>
+    <td><%= game.gt %></td>
     <td><%= week.w %></td>
-    <td><%= game.vnn %></td>
-    <td><%= game.hnn %></td>
+    <td><%= v.abbr %></td>
+    <td><%= h.abbr %></td>
   </tr>
   <% end %>
 </table>
