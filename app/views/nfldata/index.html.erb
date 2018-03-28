@@ -9,7 +9,7 @@
     <th>home</th>
   </tr>
 
-  <% Nflgame.all.each do |game| %>
+  <% Nflgame.order("eid ASC").all.each do |game| %>
   <tr>
     <td><%= link_to game.eid, nflgame_path(game) %></td>
     <% week = Nflweek.find(game.nflweek_id) %>
