@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180301210119) do
+ActiveRecord::Schema.define(version: 20180322222109) do
 
   create_table "nflgames", force: :cascade do |t|
     t.string "eid"
@@ -18,11 +18,9 @@ ActiveRecord::Schema.define(version: 20180301210119) do
     t.string "d"
     t.string "t"
     t.string "q"
-    t.string "h"
-    t.string "hnn"
+    t.integer "h"
     t.string "hs"
-    t.string "v"
-    t.string "vnn"
+    t.integer "v"
     t.string "vs"
     t.string "rz"
     t.string "ga"
@@ -31,6 +29,17 @@ ActiveRecord::Schema.define(version: 20180301210119) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["nflweek_id"], name: "index_nflgames_on_nflweek_id"
+  end
+
+  create_table "nflteams", force: :cascade do |t|
+    t.string "abbr"
+    t.string "nn"
+    t.string "conf"
+    t.string "div"
+    t.integer "wins"
+    t.integer "losses"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "nflweeks", force: :cascade do |t|

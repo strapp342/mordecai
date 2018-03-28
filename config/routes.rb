@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'nflteams/index'
+
+  get 'nflteams/show'
+
   get 'nfldata/index'
 
   root 'nfldata#index'
