@@ -18,8 +18,10 @@
     <td><%= week.y %></td>
     <td><%= game.gt %></td>
     <td><%= week.w %></td>
-    <td><%= v.abbr %></td>
-    <td><%= h.abbr %></td>
+    <% vteam = Nflteam.find_by(abbr: v.abbr) %>
+    <td><%= link_to v.abbr, nflteam_path(vteam) %></td>
+    <% hteam = Nflteam.find_by(abbr: h.abbr) %>
+    <td><%= link_to h.abbr, nflteam_path(hteam) %></td>
   </tr>
   <% end %>
 </table>
