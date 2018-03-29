@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'nflplayers/index'
+
+  get 'nflplayers/show'
+
   get 'nflteams/index'
 
   get 'nflteams/show'
