@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180328151544) do
+ActiveRecord::Schema.define(version: 20180329222210) do
 
   create_table "nflgames", force: :cascade do |t|
     t.string "eid"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 20180328151544) do
 
   create_table "nflplayers", force: :cascade do |t|
     t.string "name"
+    t.string "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -56,6 +57,15 @@ ActiveRecord::Schema.define(version: 20180328151544) do
     t.string "bph"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "teamplayers", force: :cascade do |t|
+    t.integer "nflteam_id"
+    t.integer "nflplayer_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["nflplayer_id"], name: "index_teamplayers_on_nflplayer_id"
+    t.index ["nflteam_id"], name: "index_teamplayers_on_nflteam_id"
   end
 
 end
